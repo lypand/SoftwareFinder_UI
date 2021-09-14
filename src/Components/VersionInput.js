@@ -1,60 +1,56 @@
-import React from 'react'
-import { useState, useEffect } from 'react'
-import { Container, Row, Col, Button, Form } from 'react-bootstrap';
+import React, { useState, useEffect } from 'react'
+
+import { Container, Row, Col, Button, Form } from 'react-bootstrap'
 import '../Style/VersionInput.css'
 
 const Version = ({ searchProducts, errorMessage = 'Invalid Input (#.#.#)(#.#)(#)' }) => {
+  const [version, setVersion] = useState('')
+  const [isInputValid, setIsInputValid] = useState(false)
+  const [userTyped, setUserTyped] = useState(false)
 
-    const [version, setVersion] = useState('');
-    const [isInputValid, setIsInputValid] = useState(false);
-    const [userTyped, setUserTyped] = useState(false);
+  useEffect(() => {
+    validate()
+  })
+  const submitVersion = () => {
+    searchProducts(version)
+  }
 
-    useEffect(() => {
-        validate();
-    })
-    const submitVersion = () => {
-        searchProducts(version)
+  const versionUpdated = (version) => {
+    setVersion(version)
+    setUserTyped(true)
+  }
+
+  const validate = () => {
+    // Only values between 0-9
+    const reg = new RegExp('^[0-9]+$')
+
+    if (!userTyped) {
+      return
     }
-
-    const versionUpdated = (version) => {
-        setVersion(version);
-        setUserTyped(true);
+    if (version.length < 0) {
+      setIsInputValid(false)
+      return
     }
-
-    const validate = () => {
-
-        //Only values between 0-9
-        const reg = new RegExp('^[0-9]+$');
-
-        if (!userTyped) {
-            return;
-        }
-        if (version.length < 0) {
-            setIsInputValid(false)
-            return;
-        }
-        if (!version.includes('.') &&
+    if (!version.includes('.') &&
             reg.test(version)) {
-            setIsInputValid(true)
-            return;
-        }
-        const split = version.split('.');
-        if (split.length > 3) {
-            setIsInputValid(false)
-            return;
-        }
-        for (const number of split) {
-            if (!reg.test(number)) {
-                setIsInputValid(false)
-                return;
-            }
-        }
-        setIsInputValid(true)
+      setIsInputValid(true)
+      return
     }
+    const split = version.split('.')
+    if (split.length > 3) {
+      setIsInputValid(false)
+      return
+    }
+    for (const number of split) {
+      if (!reg.test(number)) {
+        setIsInputValid(false)
+        return
+      }
+    }
+    setIsInputValid(true)
+  }
 
-
-
-    return (
+  return (
         <Container>
             <Row >
                 <p></p>
@@ -71,7 +67,7 @@ const Version = ({ searchProducts, errorMessage = 'Invalid Input (#.#.#)(#.#)(#)
                 </Form>
             </Row>
         </Container>
-    )
+  )
 }
 
 export default Version

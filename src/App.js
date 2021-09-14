@@ -1,4 +1,4 @@
-import './App.css';
+import './App.css'
 import Header from './Components/Header'
 import VersionInput from './Components/VersionInput'
 import Products from './Components/Products'
@@ -13,13 +13,12 @@ const searchProduct = (version) => {
     const res = await fetch('http://localhost:49590/software/' + version)
     if(res.ok){
       const data = await res.json()
-      setProducts(data);
+      setProducts(data)
     }else if(res.status === 400){
-      setErrorMessage("Invalid request, please enter a valid version number")
+      setErrorMessage("Request failed, please enter a valid version number")
     }
   }
-  fetchProducts(); 
-  //Call out to external service here
+  fetchProducts()
 }
   return (
     <div className="conatiner">
@@ -28,7 +27,7 @@ const searchProduct = (version) => {
      <br></br>
      <Products products={products}/>
     </div>
-  );
+  )
 }
 
-export default App;
+export default App
