@@ -1,32 +1,29 @@
 import React, { useState, useEffect } from 'react'
 
-import { Container, Row, Col, Button, Form } from 'react-bootstrap'
+import { Container, Row, Button, Form } from 'react-bootstrap'
 import '../Style/VersionInput.css'
 
 const Version = ({ searchProducts, errorMessage = 'Invalid Input (#.#.#)(#.#)(#)' }) => {
   const [version, setVersion] = useState('')
-  const [isInputValid, setIsInputValid] = useState(false)
-  const [userTyped, setUserTyped] = useState(false)
+  const [isInputValid, setIsInputValid] = useState(true)
+  const [firstUpdate, setFirstUpdate] = useState(true)
 
   useEffect(() => {
+    if (firstUpdate) {
+      setFirstUpdate(false)
+      return;
+    }
     validate()
-  })
+  }, [version])
+
   const submitVersion = () => {
     searchProducts(version)
-  }
-
-  const versionUpdated = (version) => {
-    setVersion(version)
-    setUserTyped(true)
   }
 
   const validate = () => {
     // Only values between 0-9
     const reg = new RegExp('^[0-9]+$')
 
-    if (!userTyped) {
-      return
-    }
     if (version.length < 0) {
       setIsInputValid(false)
       return
@@ -54,13 +51,13 @@ const Version = ({ searchProducts, errorMessage = 'Invalid Input (#.#.#)(#.#)(#)
         <Container>
             <Row >
                 <p></p>
-                <p className="ErrorMessage">{isInputValid || !userTyped ? '' : errorMessage}</p>
+                <p className="ErrorMessage">{isInputValid ? '' : errorMessage}</p>
             </Row>
             <Row>
                 <Form>
                     <Form.Group>
                         <Form.Label>Version Number:</Form.Label>
-                        <Form.Control placeholder="e.g. 9.9.9" value={version} onChange={e => versionUpdated(e.target.value)} type="text" name="Version" />
+                        <Form.Control placeholder="e.g. 9.9.9" value={version} onChange={e => setVersion(e.target.value)} type="text" name="Version" />
                     </Form.Group>
                     <br></br>
                     <Button variant="success" disabled={!isInputValid} onClick={() => submitVersion()}>Submit</Button>
